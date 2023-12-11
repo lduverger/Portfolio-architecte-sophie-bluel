@@ -19,10 +19,10 @@ displayWorks();
 async function getCategories() {
     try {
         const response = await fetch(`http://localhost:5678/api/categories`);
-        categories = await response.json();
+        const categories = await response.json();
 
         if (!response.ok) {
-            console.log(works.description);
+            console.log(categories.description);
             return;
         }
 
