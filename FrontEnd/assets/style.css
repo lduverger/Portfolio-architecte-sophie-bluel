@@ -134,7 +134,7 @@ table {
 	border-spacing: 0;
 }
 
-a{
+a {
 	text-decoration: none;
 	color: inherit;
 }
@@ -360,8 +360,8 @@ footer nav ul {
 
 #login label {
 	color: #3D3D3D;
-	font-family: "Work Sans"; 
-	font-size: 14px; 
+	font-family: "Work Sans";
+	font-size: 14px;
 	margin: 2em 0 1em 0;
 }
 
@@ -370,10 +370,110 @@ footer nav ul {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-#login a{
+#login a {
 	display: block;
 	color: #3D3D3D;
 	text-decoration: underline;
 	font-family: "Work Sans";
 	text-align: center;
+}
+
+
+/*Modal*/
+
+.modal-not-displayed {
+	display: none;
+}
+
+.modal-displayed {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.30);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-container {
+	position: relative;
+	border-radius: 10px;
+	width: 630px;
+	height: 690px;
+	max-width: calc(100vw - 100px);
+	max-height: calc(100vh - 100px);
+	background: #FFF;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 60px 100px 45px 100px;
+}
+
+.modal-title {
+	color: #000;
+	font-family: "Work Sans";
+	font-size: 26px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+
+.modal-container .fa-xmark{
+	position:absolute;
+	top: 30px;
+	right: 30px;
+	cursor: pointer;
+	font-size: 24px;
+}
+
+.modal-photos{
+	width: 100%;
+	display: grid;
+	overflow: auto;
+	grid-template-columns: repeat(5, 1fr);
+	grid-column-gap: 7px;
+	grid-row-gap: 25px;
+	border-bottom: #B3B3B3 solid 1px;
+	padding-bottom: 70px;
+	margin-bottom: 40px;
+}
+
+.modal-photos figure{
+	position: relative;
+}
+
+.modal-photos img{
+	width: 100%;
+}
+
+.modal-photos .fa-trash-can{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 2px;
+	width: 17px;
+	height: 17px;
+	font-size: 11px;
+	color :white;
+	background: black;
+	position : absolute;
+	top: 6px;
+	right: 6px;
+	cursor: pointer;
+}
+
+.modal-container a{
+	display: flex;
+	justify-content: center;
+	align-items: center;	
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	height: 50px;
+	width: 237px;
+	border-radius: 60px;
+	font-size: 1.2em;
 }

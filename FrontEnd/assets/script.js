@@ -2,11 +2,21 @@
 
 const divGallery = document.querySelector(".gallery");
 const divFilters = document.querySelector(".filters");
+const divModalGallery = document.querySelector(".modal-photos");
+
+const linkModalGallery = document.querySelector('.js-modal-gallery');
+
+const urlCategories = "http://localhost:5678/api/categories";
+const urlWorks = "http://localhost:5678/api/works";
+
 
 console.log(divGallery);
 
 let dataWorks = null;
 let dataCategories = null;
+
+let modalGallery = null;
+let modalAddPhoto = null;
 
 
 
@@ -16,48 +26,26 @@ displayWorks();
 
 // Section Mes projets
 
-async function getCategories() {
+async function getFetch(url){
     try {
-        const response = await fetch(`http://localhost:5678/api/categories`);
-        const categories = await response.json();
+        const response = await fetch(url);
+        const datas = await response.json();
 
         if (!response.ok) {
-            console.log(categories.description);
+            console.log(datas.description);
             return;
         }
 
-        console.log(categories);
+        console.log(datas);
 
-        return categories;
+        return datas;
     }
     catch (error) {
         console.log(error);
     }
 }
 
-async function getWorks() {
-
-    try {
-
-        const response = await fetch(`http://localhost:5678/api/works`);
-        const works = await response.json();
-
-        if (!response.ok) {
-            console.log(works.description);
-            return;
-        }
-
-        console.log(works);
-
-        return works;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-
-async function createDivFilters(filters) {
+function createDivFilters(filters) {
 
     let divFilter = `<div class="filter filter_selected" categoryid="0">Tous</div>
     `;
@@ -72,7 +60,7 @@ async function createDivFilters(filters) {
     return divFilter;
 }
 
-async function createDivWorks(works) {
+function createDivWorks(works) {
     let divWork =``;
 
     for (const element of works) {
@@ -91,13 +79,13 @@ async function createDivWorks(works) {
 }
 
 async function displayWorks() {
-    dataWorks = await getWorks();
-    divGallery.innerHTML = await createDivWorks(dataWorks);
+    dataWorks = await getFetch(urlWorks);
+    divGallery.innerHTML = createDivWorks(dataWorks);
 }
 
 async function displayFilters() {
-    dataCategories = await getCategories();
-    divFilters.innerHTML = await createDivFilters(dataCategories);
+    dataCategories = await getFetch(urlCategories);
+    divFilters.innerHTML = createDivFilters(dataCategories);
     let filters = document.querySelectorAll(".filter");
     //console.log(filters);
 
@@ -118,13 +106,125 @@ async function displayFilteredWorks(event){
     }
     event.target.classList.add("filter_selected");
 
-    if(event.target.getAttribute("categoryid").toString() == 0){
-        divGallery.innerHTML = await createDivWorks(dataWorks);
+    if(event.target.getAttribute("categoryid").toString() === "0"){
+        divGallery.innerHTML = createDivWorks(dataWorks);
         return;
     }
 
     const filteredWorks = dataWorks.filter((work) => work.categoryId.toString() === event.target.getAttribute("categoryid"))
     console.log(filteredWorks);
-    divGallery.innerHTML = await createDivWorks(filteredWorks);
+    divGallery.innerHTML = createDivWorks(filteredWorks);
 }
+
+
+
+
+
+/*** modal part */
+
+linkModalGallery.addEventListener('click', (event) => openModalGallery(event));
+
+function openModalGallery(e){
+    e.preventDefault();
+    displayModalWorks();
+    const target = document.querySelector(e.currentTarget.getAttribute('href'));
+    target.classList.remove("modal-not-displayed");
+    target.classList.add("modal-displayed");
+    target.removeAttribute('aria-hidden');
+    target.setAttribute('aria-modal', 'true');
+
+    
+
+    modalGallery = target;
+    modalGallery.addEventListener('click', (event) => closeModalGallery(event));
+    modalGallery.querySelector('.js-closing-cross').addEventListener('click', (event) => closeModalGallery(event));
+    modalGallery.querySelector('.js-modal-stop').addEventListener('click', (event) => stopPropagation(event));
+}
+
+
+function closeModalGallery(e){
+    if(modalGallery === null) return;
+    e.preventDefault();
+    modalGallery.classList.remove("modal-displayed");
+    modalGallery.classList.add("modal-not-displayed");
+
+    modalGallery.removeAttribute('aria-modal');
+    modalGallery.setAttribute('aria-hidden', 'true');
+
+    modalGallery.removeEventListener('click', (event) => closeModal(event));
+    modalGallery.querySelector('.js-closing-cross').removeEventListener('click', (event) => closeModalGallery(event));
+    modalGallery.querySelector('.js-modal-stop').removeEventListener('click', (event) => stopPropagation(event));
+    
+    modalGallery = null;
+}
+
+function stopPropagation(e){
+     e.stopPropagation();
+}
+
+window.addEventListener('keydown', function(e) {
+    if(e.key === "Escape" || e.key === "Esc"){
+        closeModalGallery(e);
+    }
+})
+
+
+function createDivModalWorks(works) {
+    let divModalWork =``;
+
+    for (const element of works) {
+        //console.log(element)
+        divModalWork += `
+        <figure>
+            <img src="${element.imageUrl}" alt="${element.title}"}>
+            <i class="fa-solid fa-trash-can" trashid="${element.id}"></i>
+        </figure>
+        `;
+    }
+
+    //console.log(divWork);
+
+    return divModalWork;
+}
+
+
+async function displayModalWorks() {
+    let dataModalWorks = await getFetch(urlWorks);
+    divModalGallery.innerHTML = createDivModalWorks(dataModalWorks);
+
+    let trashs = divModalGallery.querySelectorAll(".fa-trash-can");
+    console.log(trashs);
+    modalGallery.querySelectorAll('.fa-trash-can').forEach(element => {
+        element.addEventListener('click',(event) => deleteWork(event))
+    });
+}
+
+async function deleteWork(e){
+
+    const deleteResponse = await fetch('http://localhost:5678/api/works/' + e.target.getAttribute("trashid"), {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}`  },
+        });
+
+    console.log("http://localhost:5678/api/works/" + e.target.getAttribute("trashid"));
+
+    if (!deleteResponse.ok) {
+
+        if(deleteResponse.status === 401) {
+            console.log("Not Authorized");
+            return;
+        }
+        if(deleteResponse.status === 500){
+            console.log("Unexpected Behaviour");
+            return;
+        }
+
+        console.log("Erreur non connu")
+        return;
+    }
+
+    displayModalWorks();
+    displayWorks();
+}
+
 
