@@ -5,10 +5,10 @@ const divFilters = document.querySelector(".filters");
 const divModalGallery = document.querySelector(".modal-photos");
 
 const linkModalGallery = document.querySelector('.js-modal-gallery');
+const linkModalAddWork = document.querySelector('.js-modal-add-work');
 
 const urlCategories = "http://localhost:5678/api/categories";
 const urlWorks = "http://localhost:5678/api/works";
-
 
 console.log(divGallery);
 
@@ -16,7 +16,7 @@ let dataWorks = null;
 let dataCategories = null;
 
 let modalGallery = null;
-let modalAddPhoto = null;
+let modalAddWork = null;
 
 
 
@@ -94,6 +94,9 @@ async function displayFilters() {
             displayFilteredWorks(event);
         } )
     }
+
+    createSelectCategories(dataCategories);
+
 }
 
 async function displayFilteredWorks(event){
@@ -123,6 +126,10 @@ async function displayFilteredWorks(event){
 /*** modal part */
 
 linkModalGallery.addEventListener('click', (event) => openModalGallery(event));
+linkModalAddWork.addEventListener('click', (event) => {
+    openModalAddWork(event);
+    closeModalGallery(event);
+});
 
 function openModalGallery(e){
     e.preventDefault();
@@ -151,7 +158,7 @@ function closeModalGallery(e){
     modalGallery.removeAttribute('aria-modal');
     modalGallery.setAttribute('aria-hidden', 'true');
 
-    modalGallery.removeEventListener('click', (event) => closeModal(event));
+    modalGallery.removeEventListener('click', (event) => closeModalGallery(event));
     modalGallery.querySelector('.js-closing-cross').removeEventListener('click', (event) => closeModalGallery(event));
     modalGallery.querySelector('.js-modal-stop').removeEventListener('click', (event) => stopPropagation(event));
     
@@ -165,6 +172,7 @@ function stopPropagation(e){
 window.addEventListener('keydown', function(e) {
     if(e.key === "Escape" || e.key === "Esc"){
         closeModalGallery(e);
+        //closeModalAddWork(e);
     }
 })
 
@@ -225,6 +233,111 @@ async function deleteWork(e){
 
     displayModalWorks();
     displayWorks();
+}
+
+/** modal add work */
+
+const pu = document.getElementById("photo_upload")
+const imagePreview = document.getElementById("imagePreview")
+
+const divLabel =  document.querySelectorAll(".lbl_photo_upload span, .lbl_photo_upload i")
+let prewiewDisplayed = false;
+
+pu.onchange = evt => {
+    const [file] = pu.files
+    if (file) {
+        
+        divLabel.forEach(element => element.style.display = "none")
+        imagePreview.classList.remove("not_displayed")
+        imagePreview.src = URL.createObjectURL(file)
+
+        prewiewDisplayed = true;
+    }
+}
+
+
+function openModalAddWork(e){
+    e.preventDefault();
+    displayModalAddWork();
+    const target = document.querySelector(e.currentTarget.getAttribute('href'));
+
+    
+
+    
+    target.classList.remove("modal-not-displayed");
+    target.classList.add("modal-displayed");
+    target.removeAttribute('aria-hidden');
+    target.setAttribute('aria-modal', 'true');
+
+    modalAddWork = target;
+    modalAddWork.addEventListener('click', (event) => closeModalAddWork(event));
+    modalAddWork.querySelector('.js-closing-cross').addEventListener('click', (event) => closeModalAddWork(event));
+    modalAddWork.querySelector('.js-modal-stop').addEventListener('click', (event) => stopPropagation(event));
+    modalAddWork.querySelector('.js-return').addEventListener('click', (event) => {
+        closeModalAddWork(event);
+        openModalGallery(event);
+    })
+
+}
+
+
+function closeModalAddWork(e){
+    if(modalAddWork === null) return;
+    e.preventDefault();
+    modalAddWork.classList.remove("modal-displayed");
+    modalAddWork.classList.add("modal-not-displayed");
+
+    modalAddWork.removeAttribute('aria-modal');
+    modalAddWork.setAttribute('aria-hidden', 'true');
+
+    modalAddWork.removeEventListener('click', (event) => closeModalAddWork(event));
+    modalAddWork.querySelector('.js-closing-cross').removeEventListener('click', (event) => closeModalAddWork(event));
+    modalAddWork.querySelector('.js-modal-stop').removeEventListener('click', (event) => stopPropagation(event));
+    modalAddWork.querySelector('.js-return').removeEventListener('click', (event) => {
+        closeModalAddWork(event);
+        openModalGallery(event);
+    })
+    
+    const form = modalAddWork.querySelector(".form_add-work");
+    form.reset();
+
+    if(prewiewDisplayed){
+        divLabel.forEach(element => element.style.display = "inherit")
+        imagePreview.classList.add("not_displayed")
+        imagePreview.src = "#"
+
+        
+
+        prewiewDisplayed = false;
+    }
+
+
+    modalAddWork = null;
+}
+
+
+
+
+
+async function displayModalAddWork() {
+    let dataCategories = await getFetch(urlCategories);
+
+}
+
+function createSelectCategories(Categories) {
+
+    const select = document.getElementById("select_categories")
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "0";
+    defaultOption.textContent = "Sélectionner une catégorie:";
+    select.appendChild(defaultOption);
+
+    for (const element of Categories) {
+        const option = document.createElement("option");
+        option.value = element.id;
+        option.textContent = element.name;
+        select.appendChild(option);
+    }
 }
 
 
