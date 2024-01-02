@@ -45,11 +45,13 @@
 			</article>
 		</section>
 		<section id="portfolio">
-			<h2>Mes Projets</h2>
-			<a href="#modal-gallery" class="js-modal-gallery">
-				<i class="fa-solid fa-pen-to-square"></i>
-				<span>Modifier</span>
-			</a>
+			<div class="area-title-portfolio">
+				<h2>Mes Projets</h2>
+				<a href="#modal-gallery" class="js-modal-gallery">
+					<i class="fa-solid fa-pen-to-square"></i>
+					<span>Modifier</span>
+				</a>
+			</div>
 
 			<aside id="modal-gallery" class="modal-not-displayed" aria-hidden="true" role="dialog" aria-modal="false"
 				aria-labelledby="modalTitle">
@@ -72,7 +74,7 @@
 					<i class="fa-solid fa-xmark js-closing-cross"></i>
 					<h2 class="modal-title">Ajout photo</h2>
 					<form class="form_add-work">
-						<input type="file" id="photo_upload" accept="image/png, image/jpeg">
+						<input type="file" name="image" id="photo_upload" accept="image/png, image/jpeg">
 						<label class="lbl_photo_upload" for="photo_upload">
 							<i class="fa-regular fa-image"></i>
 							<span class="btn_add-photo">+ Ajouter photo</span>
@@ -80,10 +82,9 @@
 							<img id="imagePreview" class="not_displayed" src="#" alt="your image" />
 						</label>
 						<label for="work-title">Titre</label>
-						<input type="text" name="work-title" id="work-title">
+						<input type="text" name="title" id="work-title">
 						<label for="select_categories">Catégorie</label>
-						<select type="text" name="select_categories" id="select_categories">
-
+						<select type="text" name="category" id="select_categories">
 						</select>
 						<input type="submit" value="Valider">
 					</form>

@@ -22,6 +22,7 @@ let modalAddWork = null;
 
 displayFilters();
 displayWorks();
+addListenerAddWork();
 
 
 // Section Mes projets
@@ -243,6 +244,9 @@ const imagePreview = document.getElementById("imagePreview")
 const divLabel =  document.querySelectorAll(".lbl_photo_upload span, .lbl_photo_upload i")
 let prewiewDisplayed = false;
 
+
+/**Display preview */
+
 pu.onchange = evt => {
     const [file] = pu.files
     if (file) {
@@ -301,17 +305,14 @@ function closeModalAddWork(e){
     const form = modalAddWork.querySelector(".form_add-work");
     form.reset();
 
+    //clean form add work
+
     if(prewiewDisplayed){
         divLabel.forEach(element => element.style.display = "inherit")
         imagePreview.classList.add("not_displayed")
         imagePreview.src = "#"
-
-        
-
         prewiewDisplayed = false;
     }
-
-
     modalAddWork = null;
 }
 
@@ -338,6 +339,45 @@ function createSelectCategories(Categories) {
         option.textContent = element.name;
         select.appendChild(option);
     }
+}
+
+function addListenerAddWork(){
+    const formAddWork = document.querySelector(".form_add-work");
+    formAddWork.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(formAddWork);
+
+        //console.log(formData);
+
+        const resAddWork = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}`},
+            body: formData,
+        });
+
+        if (!resAddWork.ok) {
+
+            if(resAddWork.status === 400) {
+                console.log("Bad Request");
+                return;
+            }
+            if(resAddWork.status === 401) {
+                console.log("Unauthorized");
+                return;
+            }
+            if(resAddWork.status === 500){
+                console.log("Unexpected Behaviour");
+                return;
+            }
+
+            console.log("Erreur non connu")
+            return;
+        }
+
+        console.log("Created");
+        displayWorks();
+    })
 }
 
 
