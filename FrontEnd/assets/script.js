@@ -7,10 +7,12 @@ const divModalGallery = document.querySelector(".modal-photos");
 const linkModalGallery = document.querySelector('.js-modal-gallery');
 const linkModalAddWork = document.querySelector('.js-modal-add-work');
 
+const linkLogin = document.getElementById("login");
+
 const urlCategories = "http://localhost:5678/api/categories";
 const urlWorks = "http://localhost:5678/api/works";
 
-console.log(divGallery);
+//console.log(divGallery);
 
 let dataWorks = null;
 let dataCategories = null;
@@ -24,6 +26,33 @@ displayFilters();
 displayWorks();
 addListenerAddWork();
 
+if (window.localStorage.getItem("token")) isLogged();
+
+function isLogged(){
+    linkLogin.innerText = "logout";
+    linkLogin.href = "index.html";
+    divFilters.classList.add("not_displayed");
+    linkModalGallery.classList.remove("not_displayed");
+
+    linkLogin.addEventListener("click", (event) => {
+        event.preventDefault();
+        logout();
+    })
+}
+
+function logout(){
+    window.localStorage.removeItem("token");
+    linkLogin.innerText = "login";
+    linkLogin.href = "login.html";
+    divFilters.classList.remove("not_displayed");
+    linkModalGallery.classList.add("not_displayed");
+    window.location.href = "index.html";
+
+    linkLogin.removeEventListener("click", (event) => {
+        event.preventDefault();
+        logout();
+    })
+}
 
 // Section Mes projets
 
@@ -136,7 +165,7 @@ function openModalGallery(e){
     e.preventDefault();
     displayModalWorks();
     const target = document.querySelector(e.currentTarget.getAttribute('href'));
-    target.classList.remove("modal-not-displayed");
+    target.classList.remove("not_displayed");
     target.classList.add("modal-displayed");
     target.removeAttribute('aria-hidden');
     target.setAttribute('aria-modal', 'true');
@@ -154,7 +183,7 @@ function closeModalGallery(e){
     if(modalGallery === null) return;
     e.preventDefault();
     modalGallery.classList.remove("modal-displayed");
-    modalGallery.classList.add("modal-not-displayed");
+    modalGallery.classList.add("not_displayed");
 
     modalGallery.removeAttribute('aria-modal');
     modalGallery.setAttribute('aria-hidden', 'true');
@@ -268,7 +297,7 @@ function openModalAddWork(e){
     
 
     
-    target.classList.remove("modal-not-displayed");
+    target.classList.remove("not_displayed");
     target.classList.add("modal-displayed");
     target.removeAttribute('aria-hidden');
     target.setAttribute('aria-modal', 'true');
@@ -289,7 +318,7 @@ function closeModalAddWork(e){
     if(modalAddWork === null) return;
     e.preventDefault();
     modalAddWork.classList.remove("modal-displayed");
-    modalAddWork.classList.add("modal-not-displayed");
+    modalAddWork.classList.add("not_displayed");
 
     modalAddWork.removeAttribute('aria-modal');
     modalAddWork.setAttribute('aria-hidden', 'true');

@@ -222,11 +222,11 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
-
+/*
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
-}
+}*/
 
 .gallery {
 	width: 100%;
@@ -299,15 +299,33 @@ footer nav ul {
 /* Add by loic */
 
 
+figure{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+figure img{
+	height: 100%;
+	object-fit: cover;
+}
+
+
+
+
 .area-title-portfolio{
 	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 50px;
+	gap: 40px;
 }
 
 .filters {
 	display: flex;
 	justify-content: center;
 	gap: 10px;
-	margin: 50px 0;
+	margin-bottom: 50px;
 }
 
 .filter {
@@ -337,6 +355,13 @@ footer nav ul {
 #login {
 	width: 50%;
 	margin: auto;
+}
+
+#error_message{
+	display: block;
+	text-align: center;
+	color: red;
+	font-weight: 800;
 }
 
 #login>* {

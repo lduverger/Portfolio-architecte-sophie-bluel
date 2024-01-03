@@ -23,7 +23,7 @@
 			<ul>
 				<li><a href="index.html#portfolio">projets</a></li>
 				<li><a href="index.html#contact">contact</a></li>
-				<li><a href="login.html">login</a></li>
+				<li><a href="login.html" id="login">login</a></li>
 				<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 			</ul>
 		</nav>
@@ -47,14 +47,14 @@
 		<section id="portfolio">
 			<div class="area-title-portfolio">
 				<h2>Mes Projets</h2>
-				<a href="#modal-gallery" class="js-modal-gallery">
+				<a href="#modal-gallery" class="js-modal-gallery not_displayed">
 					<i class="fa-solid fa-pen-to-square"></i>
 					<span>Modifier</span>
 				</a>
 			</div>
 
-			<aside id="modal-gallery" class="modal-not-displayed" aria-hidden="true" role="dialog" aria-modal="false"
-				aria-labelledby="modalTitle">
+			<aside id="modal-gallery" class="not_displayed" aria-hidden="true" role="dialog" aria-modal="false"
+				aria-labelledby="modalGallery">
 				<div class="modal-container js-modal-stop">
 					<i class="fa-solid fa-xmark js-closing-cross"></i>
 					<h2 class="modal-title">Galerie photo</h2>
@@ -67,8 +67,8 @@
 			</aside>
 
 
-			<aside id="modal-add-works" class="modal-not-displayed" aria-hidden="true" role="dialog" aria-modal="false"
-				aria-labelledby="modalTitle">
+			<aside id="modal-add-works" class="not_displayed" aria-hidden="true" role="dialog" aria-modal="false"
+				aria-labelledby="modalAddWork">
 				<div class="modal-container js-modal-stop">
 					<a href="#modal-gallery" class="js-return"><i class="fa-solid fa-arrow-left"></i></a>
 					<i class="fa-solid fa-xmark js-closing-cross"></i>
@@ -92,7 +92,7 @@
 			</aside>
 
 
-			<div class="filters">
+			<div class="filters" aria-hidden="false" aria-modal="true">
 			</div>
 			<div class="gallery">
 			</div>
