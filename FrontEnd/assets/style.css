@@ -145,6 +145,7 @@ body {
 	margin: auto;
 	font-family: 'Work Sans';
 	font-size: 14px;
+	background-color: #FFFEF8;
 }
 
 header {
@@ -238,7 +239,9 @@ li:hover {
 
 .gallery img {
 	width: 100%;
-
+	height: 500px;
+	margin-bottom: 7px;
+	object-fit: cover;
 }
 
 #contact {
@@ -290,24 +293,25 @@ input[type="submit"] {
 }
 
 footer nav ul {
+	height: 60px;
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	background-color: white;
 }
 
 
-/* Add by loic */
 
 
-figure{
+/* Add for OC */
+
+.edit-mode{
+	width: 100%;
+	height: 60px;
 	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-figure img{
-	height: 100%;
-	object-fit: cover;
+	justify-content: center;
+	align-items: center;
+	background-color: black;
+	color: white;
 }
 
 
@@ -350,7 +354,10 @@ figure img{
 	background: #1D6154;
 }
 
-
+.main-login{
+	margin-top: 150px;
+	margin-bottom: 350px;
+}
 
 #login {
 	width: 50%;
@@ -411,6 +418,22 @@ figure img{
 
 /*Modal*/
 
+.error-message{
+	color: red;
+	font-weight: 800;
+}
+
+.success-message{
+	color: green;
+	font-weight: 800;
+
+	/* animation-fill-mode: forwards;
+	animation-delay: 1s;
+	animation-duration: 3s;
+	animation-name: fade; */
+	
+}
+
 .modal-not-displayed {
 	display: none;
 }
@@ -431,14 +454,12 @@ figure img{
 	position: relative;
 	border-radius: 10px;
 	width: 630px;
-	height: 690px;
-	max-width: calc(100vw - 100px);
-	max-height: calc(100vh - 100px);
+	height: 800px;
 	background: #FFF;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 60px 100px 45px 100px;
+	padding: 60px 100px 0px 100px;
 }
 
 .modal-title {
@@ -448,6 +469,7 @@ figure img{
 	font-style: normal;
 	font-weight: 400;
 	line-height: normal;
+	margin-bottom: 50px;
 }
 
 .modal-container .fa-xmark{
@@ -460,22 +482,28 @@ figure img{
 
 .modal-photos{
 	width: 100%;
+	height: 500px;
 	display: grid;
 	overflow: auto;
 	grid-template-columns: repeat(5, 1fr);
-	grid-column-gap: 7px;
+	grid-column-gap: 8px;
 	grid-row-gap: 25px;
+	grid-auto-rows: 160px;
+
 	border-bottom: #B3B3B3 solid 1px;
 	padding-bottom: 70px;
-	margin-bottom: 40px;
+	margin-bottom: 35px;
 }
 
 .modal-photos figure{
 	position: relative;
+	height: 100%;
 }
 
 .modal-photos img{
 	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .modal-photos .fa-trash-can{
@@ -494,6 +522,17 @@ figure img{
 	cursor: pointer;
 }
 
+.modal-delete-message{
+	position: absolute;
+	top: 115px;
+}
+
+.modal-add-message{
+	position: absolute;
+	top: 115px;
+}
+
+
 .modal-container .js-modal-add-work{
 	display: flex;
 	justify-content: center;
@@ -508,6 +547,15 @@ figure img{
 	font-size: 1.2em;
 }
 
+.button-container{
+	width: 100%;
+	height: 120px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-top: #B3B3B3 solid 1px;
+}
+
 .fa-arrow-left{
 	position:absolute;
 	top: 30px;
@@ -516,9 +564,8 @@ figure img{
 	font-size: 24px;
 }
 
-.form_add-work{
+.form-add-work{
 	text-align: left;
-	margin-top: 30px;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -532,14 +579,16 @@ figure img{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	gap: 8px;
+	gap: 20px;
 	flex-direction: column;
-	height: 170px;
+	height: 250px;
 	background-color: #E8F1F6;
+	margin-bottom: 30px;
+	border-radius: 3px;
 }
 
 #photo_upload + label i{
-	font-size: 78px;
+	font-size: 110px;
 	color: #B9C5CC;
 }
 
@@ -548,30 +597,32 @@ figure img{
 	justify-content: center;
 	align-items: center;
 	color: #306685; 
-	width: 175px;
-	height: 36px;
+	width: 200px;
+	height: 40px;
+	font-size: 17px;
 	border-radius: 50px; 
 	background: #CBD6DC;
 	cursor: pointer;
 }
 
 #photo_upload + label .btn_subtitle{
-	font-size: 11px;
+	font-size: 13px;
 }
 
 
-.form_add-work label {
+.form-add-work label {
 	color: #3D3D3D;
 	font-family: "Work Sans";
 	font-size: 14px;
-	margin: 2em 0 1em 0;
+	margin-bottom: 15px;
 }
 
-.form_add-work input {
+.form-add-work input {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin-bottom: 30px;
 }
 
 .not_displayed{
@@ -582,11 +633,12 @@ figure img{
 	height: 100%;
 }
 
-.form_add-work select {
+.form-add-work select {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 	background: none;
+	margin-bottom: 92px;
 }
 

@@ -19,23 +19,6 @@ formLogin.addEventListener("submit", async (event) => {
     const jsonLogin = JSON.stringify(login);
 
 
-    // const responseLogin = fetch('http://localhost:5678/api/users/login', {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: jsonLogin
-    // });
-
-    // const tmpLogin = await responseLogin.json();
-
-    // if (!responseLogin.ok) {
-    //     console.log(tmpLogin.description);
-    //     return;
-    // }
-
-    // console.log(responseLogin)
-
-
-
     try {
         const responseLogin = await fetch('http://localhost:5678/api/users/login', {
             method: "POST",
@@ -45,16 +28,17 @@ formLogin.addEventListener("submit", async (event) => {
 
         const jsonResponse = await responseLogin.json();
         //console.log(responseLogin.status);
+        errorMessage.innerText = "";
 
         if (!responseLogin.ok) {
 
             if(responseLogin.status === 401) {
-                errorMessage.innerText = "Not Authorized";
+                errorMessage.innerText = "Login/mot de passe incorrect";
                 console.log("Not Authorized");
                 return;
             }
             if(responseLogin.status === 404){
-                errorMessage.innerText = "User not found";
+                errorMessage.innerText = "Cet e-mail est inconnu";
                 console.log("User not found");
                 return;
             }

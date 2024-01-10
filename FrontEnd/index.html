@@ -17,6 +17,10 @@
 </head>
 
 <body>
+	<div class="edit-mode not_displayed">
+		<i class="fa-regular fa-pen-to-square"></i>
+		<span>Mode édition</span>
+	</div>
 	<header>
 		<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 		<nav>
@@ -48,7 +52,7 @@
 			<div class="area-title-portfolio">
 				<h2>Mes Projets</h2>
 				<a href="#modal-gallery" class="js-modal-gallery not_displayed">
-					<i class="fa-solid fa-pen-to-square"></i>
+					<i class="fa-regular fa-pen-to-square"></i>
 					<span>Modifier</span>
 				</a>
 			</div>
@@ -58,11 +62,9 @@
 				<div class="modal-container js-modal-stop">
 					<i class="fa-solid fa-xmark js-closing-cross"></i>
 					<h2 class="modal-title">Galerie photo</h2>
-					<div class="modal-photos">
-					</div>
-					<div>
+					<p class="modal-delete-message"></p>
+					<div class="modal-photos"></div>
 						<a href="#modal-add-works" class="js-modal-add-work">Ajouter une photo</a>
-					</div>
 				</div>
 			</aside>
 
@@ -73,7 +75,8 @@
 					<a href="#modal-gallery" class="js-return"><i class="fa-solid fa-arrow-left"></i></a>
 					<i class="fa-solid fa-xmark js-closing-cross"></i>
 					<h2 class="modal-title">Ajout photo</h2>
-					<form class="form_add-work">
+					<p class="modal-add-message"></p>
+					<form class="form-add-work" href="#modal-gallery">
 						<input type="file" name="image" id="photo_upload" accept="image/png, image/jpeg">
 						<label class="lbl_photo_upload" for="photo_upload">
 							<i class="fa-regular fa-image"></i>
@@ -86,7 +89,9 @@
 						<label for="select_categories">Catégorie</label>
 						<select type="text" name="category" id="select_categories">
 						</select>
-						<input type="submit" value="Valider">
+						<div class="button-container">
+							<input id="button-add" type="submit" value="Valider">
+						</div>
 					</form>
 				</div>
 			</aside>
