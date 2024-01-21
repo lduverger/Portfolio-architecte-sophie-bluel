@@ -3,12 +3,11 @@ const inputEmail = document.getElementById("email");
 const inputPassword = document.getElementById("password")
 const errorMessage = document.getElementById("error_message");
 
-// console.log(inputEmail);
-// console.log(inputPassword);
 
-
-
-
+/**
+ * add an event listener to catch the submit of the login and password
+ * allow to send a request to the backend
+ */
 formLogin.addEventListener("submit", async (event) => {
     event.preventDefault();
     const login = {
@@ -27,27 +26,22 @@ formLogin.addEventListener("submit", async (event) => {
         });
 
         const jsonResponse = await responseLogin.json();
-        //console.log(responseLogin.status);
         errorMessage.innerText = "";
 
         if (!responseLogin.ok) {
 
             if(responseLogin.status === 401) {
                 errorMessage.innerText = "Login/mot de passe incorrect";
-                console.log("Not Authorized");
                 return;
             }
             if(responseLogin.status === 404){
                 errorMessage.innerText = "Cet e-mail est inconnu";
-                console.log("User not found");
                 return;
             }
 
-            console.log("Erreur non connu")
+            errorMessage.innerText = "Erreur non connu";
             return;
         }
-
-        console.log(jsonResponse.token);
         window.localStorage.setItem("token", jsonResponse.token);
         window.location.href = "index.html";
 

@@ -13,8 +13,6 @@ const linkLogin = document.getElementById("login");
 const urlCategories = "http://localhost:5678/api/categories";
 const urlWorks = "http://localhost:5678/api/works";
 
-//console.log(divGallery);
-
 const messageDelete = document.querySelector(".modal-delete-message");
 const messageAddWork = document.querySelector(".modal-add-message");
 
@@ -33,7 +31,6 @@ if (window.localStorage.getItem("token")) {
     const decode = JSON.parse(atob(window.localStorage.getItem("token").split('.')[1]));
     if (decode.exp * 1000 < new Date().getTime()) {
         logout();
-        console.log('Time Expired');
     }
     else {
         isLogged();
@@ -92,9 +89,6 @@ async function getFetch(url) {
             console.log(datas.description);
             return;
         }
-
-        console.log(datas);
-
         return datas;
     }
     catch (error) {
@@ -105,7 +99,7 @@ async function getFetch(url) {
 /**
  * 
  * @param filters data of filters(names of filters) 
- * @returns html block for display filters
+ * @returns html block to display filters
  */
 function createDivFilters(filters) {
 
@@ -113,25 +107,22 @@ function createDivFilters(filters) {
     `;
 
     for (const element of filters) {
-        //console.log(element.name)
         divFilter += `
         <div class="filter" categoryid="${element.id}">${element.name}</div>
         `;
     }
-    //console.log(divFilter);
     return divFilter;
 }
 
 /**
  * 
  * @param works data of works 
- * @returns  html block for display works
+ * @returns  html block to display works
  */
 function createDivWorks(works) {
     let divWork = ``;
 
     for (const element of works) {
-        //console.log(element)
         divWork += `
         <figure>
             <img src="${element.imageUrl}" alt="${element.title}">
@@ -139,9 +130,6 @@ function createDivWorks(works) {
         </figure>
         `;
     }
-
-    //console.log(divWork);
-
     return divWork;
 }
 
@@ -157,8 +145,7 @@ async function displayWorks() {
 async function displayFilters() {
     dataCategories = await getFetch(urlCategories);
     divFilters.innerHTML = createDivFilters(dataCategories);
-    let filters = document.querySelectorAll(".filter");
-    //console.log(filters);
+    const filters = document.querySelectorAll(".filter");
 
     for (const element of filters) {
         element.addEventListener("click", (event) => {
@@ -166,13 +153,18 @@ async function displayFilters() {
         })
     }
 
-    createSelectCategories(dataCategories);
+    createSelectInputCategories(dataCategories);
 
 }
 
+/**
+ *  display filtered works in the gallery
+ * @param {*} event 
+ * @returns 
+ */
 async function displayFilteredWorks(event) {
 
-    let filters = document.querySelectorAll(".filter");
+    const filters = document.querySelectorAll(".filter");
     for (const element of filters) {
         element.classList.remove("filter_selected");
     }
@@ -184,7 +176,6 @@ async function displayFilteredWorks(event) {
     }
 
     const filteredWorks = dataWorks.filter((work) => work.categoryId.toString() === event.target.getAttribute("categoryid"))
-    console.log(filteredWorks);
     divGallery.innerHTML = createDivWorks(filteredWorks);
 }
 
@@ -194,15 +185,25 @@ async function displayFilteredWorks(event) {
 
 /*** modal part */
 
+/*
+eventListener used to open modals
+*/
 linkModalGallery.addEventListener('click', (event) => openModalGallery(event));
 linkModalAddWork.addEventListener('click', (event) => {
     openModalAddWork(event);
     closeModalGallery(event);
 });
 
+/** Modal gallery */
+
+/**
+ * allow to open modal Gallery
+ * add accessibility 
+ * @param event is used for prevent default behavior 
+ */
 function openModalGallery(e) {
-    console.log("target = ", e.target);
     e.preventDefault();
+    messageDelete.innerText = "";
     displayModalWorks();
     const target = document.querySelector(e.currentTarget.getAttribute('href'));
     target.classList.remove("not_displayed");
@@ -216,7 +217,12 @@ function openModalGallery(e) {
     modalGallery.querySelector('.js-modal-stop').addEventListener('click', (event) => stopPropagation(event));
 }
 
-
+/**
+ * allow to close modal Gallery
+ * remove accessibility
+ * @param {*} e 
+ * @returns usefull for prevent closing when keydown Escape
+ */
 function closeModalGallery(e) {
     if (modalGallery === null) return;
     e.preventDefault();
@@ -244,12 +250,15 @@ window.addEventListener('keydown', function (e) {
     }
 })
 
-
+/**
+ * create the block to display the works into the modal gallery
+ * @param works to display
+ * @returns html block to display into the modal gallery
+ */
 function createDivModalWorks(works) {
     let divModalWork = ``;
 
     for (const element of works) {
-        //console.log(element)
         divModalWork += `
         <figure>
             <img src="${element.imageUrl}" alt="${element.title}"}>
@@ -257,24 +266,28 @@ function createDivModalWorks(works) {
         </figure>
         `;
     }
-
-    //console.log(divWork);
-
     return divModalWork;
 }
 
-
+/**
+ * Display works into the modal gallery
+ */
 async function displayModalWorks() {
-    let dataModalWorks = await getFetch(urlWorks);
+    const dataModalWorks = await getFetch(urlWorks);
     divModalGallery.innerHTML = createDivModalWorks(dataModalWorks);
 
-    let trashs = divModalGallery.querySelectorAll(".fa-trash-can");
-    console.log(trashs);
+    const trashs = divModalGallery.querySelectorAll(".fa-trash-can");
     modalGallery.querySelectorAll('.fa-trash-can').forEach(element => {
         element.addEventListener('click', (event) => deleteWork(event))
     });
 }
 
+
+/**
+ * Allow to delete one work when the user click on the trash
+ * @param {*} e allow to get the attribute trashId
+ * @returns error message
+ */
 async function deleteWork(e) {
 
     messageDelete.innerText = "";
@@ -286,25 +299,19 @@ async function deleteWork(e) {
         headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
     });
 
-    console.log("http://localhost:5678/api/works/" + e.target.getAttribute("trashid"));
-
     if (!deleteResponse.ok) {
 
         messageDelete.classList.add("error-message");
 
         if (deleteResponse.status === 401) {
             messageDelete.innerText = "Veuillez vous connecter";
-            console.log("Not Authorized");
             return;
         }
         if (deleteResponse.status === 500) {
             messageDelete.innerText = "Suppression non autorisée";
-            console.log("Unexpected Behaviour");
             return;
         }
-
         messageDelete.innerText = "Erreur non connu";
-        console.log("Erreur non connu")
         return;
     }
 
@@ -325,7 +332,7 @@ const divLabel = document.querySelectorAll(".lbl_photo_upload span, .lbl_photo_u
 let prewiewDisplayed = false;
 
 
-/**For display preview */
+/** use to display preview */
 
 pu.onchange = evt => {
     const [file] = pu.files
@@ -339,11 +346,14 @@ pu.onchange = evt => {
     }
 }
 
-
+/**
+ * Allow to display the modal Add work
+ * @param {*} e 
+ */
 function openModalAddWork(e) {
     e.preventDefault();
     const target = document.querySelector(e.currentTarget.getAttribute('href'));
-
+    messageAddWork.innerText = "";
     target.classList.remove("not_displayed");
     target.classList.add("modal-displayed");
     target.removeAttribute('aria-hidden');
@@ -360,7 +370,11 @@ function openModalAddWork(e) {
 
 }
 
-
+/**
+ * allow to close modal Add work
+ * @param {*} e 
+ * @returns usefull for prevent closing when keydown Escape
+ */
 function closeModalAddWork(e) {
     if (modalAddWork === null) return;
     e.preventDefault();
@@ -381,7 +395,7 @@ function closeModalAddWork(e) {
     const form = modalAddWork.querySelector(".form-add-work");
     form.reset();
 
-    //clean form add work
+    //allow to clean form add work
 
     if (prewiewDisplayed) {
         divLabel.forEach(element => element.style.display = "inherit")
@@ -392,7 +406,11 @@ function closeModalAddWork(e) {
     modalAddWork = null;
 }
 
-function createSelectCategories(Categories) {
+/**
+ * allow to create options into the select input in the modal add work
+ * @param {*} Categories to display into select input 
+ */
+function createSelectInputCategories(Categories) {
 
     const select = document.getElementById("select_categories")
     const defaultOption = document.createElement("option");
@@ -408,8 +426,10 @@ function createSelectCategories(Categories) {
     }
 }
 
-let image;
 
+/**
+ * allow to submit a new work in the database
+ */
 function addListenerAddWork() {
     const formAddWork = document.querySelector(".form-add-work");
     formAddWork.addEventListener("submit", async function (event) {
@@ -418,9 +438,6 @@ function addListenerAddWork() {
         messageAddWork.classList.remove("error-message");
 
         const formData = new FormData(formAddWork);
-
-        console.log(formData);
-
         const resAddWork = await fetch("http://localhost:5678/api/works", {
             method: "POST",
             headers: { Authorization: `Bearer ${window.localStorage.getItem("token")}` },
@@ -432,43 +449,34 @@ function addListenerAddWork() {
 
             if (resAddWork.status === 400) {
                 messageAddWork.innerText = "Bad Request";
-                console.log("Bad Request");
                 return;
             }
             if (resAddWork.status === 401) {
                 messageAddWork.innerText = "Non autorisé";
-                console.log("Unauthorized");
                 return;
             }
             if (resAddWork.status === 500) {
                 messageAddWork.innerText = "Unexpected Behaviour";
-                console.log("Unexpected Behaviour");
                 return;
             }
 
             messageAddWork.innerText = "Erreur non connu";
-            console.log("Erreur non connu")
             return;
         }
 
-        console.log("Created");
         closeModalAddWork(event);
         linkModalGallery.click();
         displayWorks();
         disabledButton();
     })
 
+    // allow to verify if the form is completely filled 
     formAddWork.addEventListener("change", () => {
         const formData = new FormData(formAddWork);
 
-        image = formData.get("image");
+        const image = formData.get("image");
         const title = formData.get("title");
         const category = formData.get("category");
-
-
-        console.log(image);
-        console.log(title);
-        console.log(category);
 
         if(image.name == "" || title == "" || category == "0"){
             disabledButton();
@@ -477,19 +485,12 @@ function addListenerAddWork() {
             btnAddWork.removeAttribute('disabled');
             btnAddWork.style.removeProperty("background-color");
         }
-
-
-        // if(formData.get("image"))
-        // for (const value of formData) {
-        //     console.log("value =" ,value);
-
-        //     if(value == null){
-        //         console.log("pas de valeur");
-        //     }
-        // }
     });
 }
 
+/**
+ * Change the look of the button when is disabled
+ */
 function disabledButton(){
     btnAddWork.setAttribute('disabled', '');
     btnAddWork.style.backgroundColor = "gray"
